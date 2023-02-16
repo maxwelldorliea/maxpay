@@ -18,11 +18,30 @@ class DBStorage:
     __engine = None
 
 
-    def __init__(self, env="production") -> None:
+    def __init__(self, dot_env=True) -> None:
         """Initializes the DBStorage Engine."""
-        self.__engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
-        if env == "development":
+        if dot_env:
+            self.env = self.config_env()
+            env = self.env
+            self.__engine = create_engine("mysql://{}:{}@{}/{}".format(
+                self.env['db_user'], self.env['db_pass'],
+                self.env['host'], self.env['db']
+                ), pool_pre_ping=True)
+        else:
+            self.__engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+            self.env = {}
+        if self.env.get('env') == "test":
             Base.metadata.drop_all(self.__engine)
+
+    def config_env(self) -> dict:
+        """Set environment from dot env file."""
+        env={}
+        with open('.env') as env_file:
+            for line in env_file:
+                key, val = line.strip('\n').strip(' ').split('=')
+                env[key] = val
+        return env
+
 
     def all(self, cls=None) -> dict:
         """Return all objects in the db or all objects for the class pass."""

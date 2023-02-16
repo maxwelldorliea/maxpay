@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy import func
+from sqlalchemy import func, String
 from sqlalchemy.orm import DeclarativeBase
 import models
 
@@ -15,7 +15,7 @@ class Base(DeclarativeBase):
 
 class BaseModel:
     """Implement All Share Atrributes."""
-    id: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(String(60), primary_key=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(nullable=True, onupdate=func.now())
 
