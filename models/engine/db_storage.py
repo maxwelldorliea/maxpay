@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 """This Module Handle All DB Operations For All Models."""
 from models.user import User
+from models.role import Role
 from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 models = {
-        'user': User
+        'user': User,
+        'role': Role
         }
 
 
