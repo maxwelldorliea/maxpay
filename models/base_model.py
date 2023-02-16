@@ -3,39 +3,53 @@
 """This Module Implement All Share Attributes."""
 import uuid
 from datetime import datetime
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy import func
+from sqlalchemy.orm import DeclarativeBase
+import models
+
+class Base(DeclarativeBase):
+    pass
 
 
 class BaseModel:
     """Implement All Share Atrributes."""
+    id: Mapped[str] = mapped_column(primary_key=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(nullable=True, onupdate=func.now())
 
-    def __init__(self, *args, **kwargs):
-        """Initialize the base model."""
+
+    def __str__(self, *arg, **kwargs) -> None:
         if kwargs:
-            for key, val in kwargs.items():
-                setattr(self, key, val)
-            if not kwargs.get('id'):
+            for attr, val in kwargs.items():
+                setattr(self, attr, val)
+            if 'id' not in kwargs:
                 self.id = str(uuid.uuid4())
-            if not kwargs.get('created_at'):
+            if 'created_at' not in kwargs:
                 self.created_at = datetime.utcnow()
-            elif type(self.created_at) is str:
-                f = "%Y-%m-%dT%H:%M:%S.%f"
-                self.created_at = self.created_at.strptime(self.created_at, f)
-            if kwargs.get('updated_at') and type(self.updated_at) is str:
-                f = "%Y-%m-%dT%H:%M:%S.%f"
-                self.updated_at = self.updated_at.strptime(self.updated_at, f)
+            else:
+                if type(self.created_at) is str:
+                    fmt = '%Y-%m-%dT%H:%M:%S.%f'
+                    self.created_at = datetime.strptime(self.created_at, fmt)
+            if 'updated_at' not in kwargs:
+                self.updated_at = None
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.utcnow()
-            self.updated_at = None
+            self.updated_at = datetime.utcnow()
 
     def __str__(self):
         """Return string representation of the object."""
         model = self.__class__.__name__
         return "[{}] ({}) {}".format(model, self.id, self.__dict__);
 
-    def save(self, obj=None):
+    def save(self):
         """Save the object in the storage engine."""
         self.updated_at = datetime.utcnow();
+        models.storage.new(self)
+        models.storage.save()
+
     
     def to_dict(self):
         """Convert the object to dictionary representation."""
@@ -46,14 +60,14 @@ class BaseModel:
         obj['__class__'] = self.__class__.__name__
         return obj
 
-id = str(uuid.uuid4())
+# id = str(uuid.uuid4())
 
-obj = {
-        'name': 'Max',
-        'role': 'Admin'
-        }
+# obj = {
+        # 'name': 'Max',
+        # 'role': 'Admin'
+        # }
 
-base = BaseModel(**obj)
-print(base)
-base.save()
-print(base.to_dict())
+# base = BaseModel(**obj)
+# print(base)
+# base.save()
+# print(base.to_dict())
