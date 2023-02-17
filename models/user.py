@@ -12,7 +12,8 @@ class User(BaseModel, Base):
     __tablename__ = 'users'
     first_name: Mapped[str] = mapped_column(String(30))
     middle_name: Mapped[str] = mapped_column(String(30), nullable=True)
-    role: Mapped[List["Role"]] = relationship()
+    roles: Mapped[List["Role"]] = relationship()
+    transaction_histories: Mapped[List["Transaction"]] = relationship()
     account: Mapped["Account"] = relationship(back_populates='user')
     last_name: Mapped[str] = mapped_column(String(30))
     email: Mapped[str] = mapped_column(String(30), unique=True)

@@ -3,6 +3,7 @@
 from models.user import User
 from models.role import Role
 from models.account import Account
+from models.transaction import Transaction
 from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -10,7 +11,8 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 models = {
         'user': User,
         'role': Role,
-        'account': Account
+        'account': Account,
+        'transaction': Transaction
         }
 
 
