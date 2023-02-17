@@ -10,9 +10,10 @@ from typing import List
 class User(BaseModel, Base):
     """Implement all user functionalities."""
     __tablename__ = 'users'
-    first_name: Mapped[str] = mapped_column(String(30), nullable=False)
-    middle_name: Mapped[str] = mapped_column(String(30))
+    first_name: Mapped[str] = mapped_column(String(30))
+    middle_name: Mapped[str] = mapped_column(String(30), nullable=True)
     role: Mapped[List["Role"]] = relationship()
-    last_name: Mapped[str] = mapped_column(String(30), nullable=False)
-    email: Mapped[str] = mapped_column(String(30), unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(String(80), nullable=False)
+    account: Mapped["Account"] = relationship(back_populates='user')
+    last_name: Mapped[str] = mapped_column(String(30))
+    email: Mapped[str] = mapped_column(String(30), unique=True)
+    password: Mapped[str] = mapped_column(String(80))

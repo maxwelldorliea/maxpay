@@ -2,13 +2,15 @@
 """This Module Handle All DB Operations For All Models."""
 from models.user import User
 from models.role import Role
+from models.account import Account
 from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 models = {
         'user': User,
-        'role': Role
+        'role': Role,
+        'account': Account
         }
 
 
@@ -22,15 +24,14 @@ class DBStorage:
         """Initializes the DBStorage Engine."""
         if dot_env:
             self.env = self.config_env()
-            env = self.env
             self.__engine = create_engine("mysql://{}:{}@{}/{}".format(
-                self.env['db_user'], self.env['db_pass'],
-                self.env['host'], self.env['db']
+                self.env['DB_USER'], self.env['DB_PASS'],
+                self.env['HOST'], self.env['DB']
                 ), pool_pre_ping=True)
         else:
             self.__engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
             self.env = {}
-        if self.env.get('env') == "test":
+        if self.env.get('ENV') == "test":
             Base.metadata.drop_all(self.__engine)
 
     def config_env(self) -> dict:
@@ -43,18 +44,18 @@ class DBStorage:
         return env
 
 
-    def all(self, cls=None) -> dict:
+    def all(self, cls=None, limit=25) -> dict:
         """Return all objects in the db or all objects for the class pass."""
         objs = {}
         if not cls:
             for name, model in models.items():
-                result = self.__session.query(model).all()
+                result = self.__session.query(model).limit(limit).all()
                 for obj in result:
                     key = f'{obj.__class__.__name__}.{obj.id}'
                     objs[key] = obj
             return objs
 
-        result = self.__session.query(cls).all()
+        result = self.__session.query(cls).limit(limit).all()
         for obj in result:
             key = f'{obj.__class__.__name__}.{obj.id}'
             objs[key] = obj
@@ -70,12 +71,10 @@ class DBStorage:
         """Return an object given its id and class  name."""
         if not cls or not id:
             return None
-        objs = self.all(cls)
-        key = f'{cls.__name__}.{id}'
-        for k, obj in objs.items():
-            if k == key:
-                return obj
-        return None
+        obj = self.__session.query(cls).where(cls.id == id).first()
+        if not obj:
+            return None
+        return obj
 
     def save(self) -> None:
         """Commit the current db session."""

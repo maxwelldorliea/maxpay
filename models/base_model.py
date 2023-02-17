@@ -20,7 +20,7 @@ class BaseModel:
     updated_at: Mapped[datetime] = mapped_column(nullable=True, onupdate=func.now())
 
 
-    def __str__(self, *arg, **kwargs) -> None:
+    def __init__(self, *arg, **kwargs) -> None:
         if kwargs:
             for attr, val in kwargs.items():
                 setattr(self, attr, val)
@@ -53,21 +53,11 @@ class BaseModel:
     
     def to_dict(self):
         """Convert the object to dictionary representation."""
-        obj = self.__dict__
+        obj = self.__dict__.copy()
         if obj['updated_at']:
             obj['updated_at'] = obj['updated_at'].isoformat()
+        if obj.get('_sa_instance_state'):
+            del obj['_sa_instance_state']
         obj['created_at'] = obj['created_at'].isoformat()
         obj['__class__'] = self.__class__.__name__
         return obj
-
-# id = str(uuid.uuid4())
-
-# obj = {
-        # 'name': 'Max',
-        # 'role': 'Admin'
-        # }
-
-# base = BaseModel(**obj)
-# print(base)
-# base.save()
-# print(base.to_dict())
