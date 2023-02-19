@@ -5,6 +5,7 @@ from models.base_model import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String
 from typing import List
+import models
 
 
 class User(BaseModel, Base):
@@ -18,3 +19,8 @@ class User(BaseModel, Base):
     last_name: Mapped[str] = mapped_column(String(30))
     email: Mapped[str] = mapped_column(String(30), unique=True)
     password: Mapped[str] = mapped_column(String(80))
+
+    
+    def get_user_by_email(self):
+        """Return user from db storage or None when not in db storage."""
+        return models.storage.get_user_by_email(type(self), self.email)

@@ -7,6 +7,7 @@ from models.transaction import Transaction
 from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+import random
 
 models = {
         'user': User,
@@ -92,3 +93,29 @@ class DBStorage:
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         session = scoped_session(session_factory)
         self.__session = session
+
+    def get_user_by_email(self, cls: User, email: str) -> User:
+        """Return a user from db given its email."""
+        user = self.__session.query(cls).where(cls.email == email).first()
+        if not user:
+            return None
+        return user
+
+    def get_account_by_number(
+            self, cls: Account, account_number: str) -> Account:
+        """Return an account given its number or None."""
+        account = self.__session.query(cls).where(
+                cls.account_number == account_number).first()
+
+        if not account:
+            return None
+        return account
+
+    def get_user_account_num(self, cls: Account) -> str:
+        """Get an account number for a new user."""
+        nums='0123456789'
+        account_number="".join(random.choices(nums, k=10))
+
+        while self.get_account_by_number(cls, account_number):
+            account_number="".join(random.choices(num, k=10))
+        return account_number
