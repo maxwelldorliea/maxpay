@@ -14,12 +14,13 @@ class User(BaseModel, Base):
     first_name: Mapped[str] = mapped_column(String(30))
     middle_name: Mapped[str] = mapped_column(String(30), nullable=True)
     roles: Mapped[List["Role"]] = relationship()
+    otp: Mapped[List["OTP"]] = relationship()
     transaction_histories: Mapped[List["Transaction"]] = relationship()
     account: Mapped["Account"] = relationship(back_populates='user')
     last_name: Mapped[str] = mapped_column(String(30))
+    is_verify: Mapped[bool] = mapped_column(default=False)
     email: Mapped[str] = mapped_column(String(30), unique=True)
     password: Mapped[str] = mapped_column(String(80))
-
     
     def get_user_by_email(self):
         """Return user from db storage or None when not in db storage."""

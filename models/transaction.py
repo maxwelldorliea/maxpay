@@ -10,8 +10,9 @@ class Transaction(BaseModel, Base):
     __tablename__ = 'transactions'
     user_id: Mapped[str] = mapped_column(ForeignKey('users.id'))
     action: Mapped[str] = mapped_column(String(20))
+    message: Mapped[str] = mapped_column(String(3000))
     amount: Mapped[int] = mapped_column()
-    fees: Mapped[int] = mapped_column()
+    fees: Mapped[int] = mapped_column(default=0)
     balance_before_transaction: Mapped[int] = mapped_column()
     balance_after_transaction: Mapped[int] = mapped_column()
     status: Mapped[str] = mapped_column(String(20), server_default='successful')

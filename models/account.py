@@ -15,7 +15,7 @@ class Account(BaseModel, Base):
     user: Mapped['User'] = relationship(back_populates='account')
     account_number: Mapped[str] = mapped_column(String(10), unique=True)
     balance: Mapped[int] = mapped_column()
-    pin: Mapped[int] = mapped_column()
+    pin: Mapped[str] = mapped_column(String(80))
     active: Mapped[bool] = mapped_column(default=True)
     is_block: Mapped[bool] = mapped_column(default=False)
 

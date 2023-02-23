@@ -3,6 +3,8 @@
 from fastapi import FastAPI, Depends, Request
 from models import storage
 from api.v1.view import app_view
+from api.v1.view.user import user_view
+
 
 async def close_session() -> None:
     """Close current after every request."""
@@ -13,6 +15,7 @@ async def close_session() -> None:
 
 app = FastAPI(dependencies=[Depends(close_session)])
 app.include_router(app_view)
+app.include_router(user_view)
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     # do things before the request

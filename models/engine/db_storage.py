@@ -4,6 +4,7 @@ from models.user import User
 from models.role import Role
 from models.account import Account
 from models.transaction import Transaction
+from models.otp import OTP
 from models.base_model import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -13,7 +14,8 @@ models = {
         'user': User,
         'role': Role,
         'account': Account,
-        'transaction': Transaction
+        'transaction': Transaction,
+        'otp': OTP
         }
 
 
@@ -119,3 +121,22 @@ class DBStorage:
         while self.get_account_by_number(cls, account_number):
             account_number="".join(random.choices(num, k=10))
         return account_number
+
+    def verify_user(self, cls: OTP, user_id: str, code: int):
+        """Verify user registration."""
+        user = self.get(User, user_id)
+        otp = self.__session.query(cls).where(cls.user_id == user_id).first()
+        if otp.code != code:
+            return False
+        user.is_verify = True
+        self.delete(otp)
+        self.save()
+        return True
+
+    def update(self, cls, obj):
+        """Update the current object."""
+        self.__session.query(cls).update(obj)
+    
+    def delete(self, obj):
+        """Delete the current object."""
+        self.__session.delete(obj)
