@@ -1,9 +1,9 @@
-import { getUser, getUserAccount } from './store.js';
+import { getUser } from './store.js';
 
-export function load () {
-    const user = getUser();
-    const id = "fb1d363e-0b11-4495-a895-c5b11d756e81";
-    const account = getUserAccount(id);
+export async function load () {
+    const data = await getUser();
+    const user = data.user;
+    const account = data.account;
     return {
         user,
         account

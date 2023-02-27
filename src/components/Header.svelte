@@ -5,7 +5,7 @@
 <header class="bg-blue-500 p-6 text-white flex justify-between">
  <h3 class="font-bold text-2xl">MAXPAY</h3>
  {#if !login}
-   <button>Sign In</button>
+   <a href='/login'><button>Sign In</button></a>
  {:else}
    <a href="/login"><button>Sign Out</button></a>
  {/if}
