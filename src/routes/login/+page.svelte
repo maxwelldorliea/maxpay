@@ -1,7 +1,7 @@
 <form method="POST" class="form bg-slate-200 flex flex-col h-screen justify-center p-8 rounded-xl">
   <label>
     <span class="block text-center text-4xl mb-4">Email</span>
-    <input name="email" type="email" class="md:w-3/5 block p-4 rounded-xl container mx-auto">
+    <input name="email" type="text" class="md:w-3/5 block p-4 rounded-xl container mx-auto">
   </label>
   <label>
     <span class="block text-center text-4xl mt-4 mb-4">Password</span>
