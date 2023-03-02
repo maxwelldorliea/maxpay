@@ -7,7 +7,7 @@ from models.role import Role
 from models.otp import OTP
 from models.transaction import Transaction
 from schemes.user import VerifyUser
-from schemes.user import UserRequest, UserResponse, TransferData, CurrentUser
+from schemes.user import UserRequest, UserResponse, TransferData, CurrentUser, Login
 from fastapi import HTTPException, status, Depends, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import List
@@ -26,7 +26,7 @@ def get_users(limit: int=25, user: User=Depends(get_current_user)):
     return users
 
 
-@user_view.post('/users', response_model=UserResponse)
+@user_view.post('/users', response_model=CurrentUser)
 def create_user(user: UserRequest):
     """Create a new user in db storage."""
     user = User(**(user).dict())
@@ -43,16 +43,20 @@ def create_user(user: UserRequest):
     role.save()
     otp = OTP(user_id=user.id, code=OTP.generate_otp())
     otp.save()
-    return user.to_dict()
+    account_info = {
+            'user': user,
+            'account': user.account
+            }
+    return account_info;
 
 @user_view.get('/users/{id}', response_model=UserResponse)
-def get_user(id: str):
+def get_user(id: str, _=Depends(get_current_user)):
     """Return a user given its id."""
     user = storage.get(User, id)
     if not user:
         raise HTTPException(
                 status.HTTP_404_NOT_FOUND, detail='user not found!')
-    return user
+    return user.to_dict()
 
 @user_view.post('/verify_email')
 def verify_email(data: VerifyUser):
@@ -65,7 +69,7 @@ def verify_email(data: VerifyUser):
             }
 
 @user_view.post('/sign_in', tags=['AUTH'])
-def generate_access_token(credential: OAuth2PasswordRequestForm=Depends()):
+def sign_in(credential: OAuth2PasswordRequestForm=Depends()):
     """Return user access token."""
     credential_exception = HTTPException(
                 status.HTTP_401_UNAUTHORIZED,
@@ -90,14 +94,13 @@ def generate_access_token(credential: OAuth2PasswordRequestForm=Depends()):
             }
 
 
-@user_view.get('/me')
+@user_view.get('/me', response_model=CurrentUser)
 def get_me(user: User=Depends(get_current_user)):
-    data = {
-            'account': user.account,
-            'id': user.id,
-            'email': user.email
+    user_info = {
+            'user': user,
+            'account': user.account
             }
-    return data
+    return user_info
 
 
 @user_view.post('/transfer')
