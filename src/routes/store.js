@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 const BASE_URL = 'http://localhost:8000/api/v1'
 
 export const getUser = async (user_id) => {
@@ -28,6 +30,18 @@ export const getMe = async (token) => {
 
 export const registerUser = async (data) => {
     const res = await fetch(`${BASE_URL}/users`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    return res;
+}
+
+export const VerifyMail = async (data) => {
+    const res = await fetch(`${BASE_URL}/verify_email`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'

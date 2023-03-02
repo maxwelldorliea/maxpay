@@ -2,7 +2,7 @@ import { redirect, fail } from '@sveltejs/kit';
 import { registerUser } from '../store.js';
 
 export const actions = {
-  default: async ({ request }) => {
+  default: async ({ request, cookies}) => {
     const data = Object.fromEntries(await request.formData());
     if (!data.middle_name)
         delete data['middle_name'];
@@ -22,6 +22,9 @@ export const actions = {
     const res = await registerUser(data);
     if (res.status === 400)
       return fail(404, {firstName, lastName, email, middleName, mailTaken: true});
-    throw redirect(301, '/');
+    const user = await res.json();
+    cookies.set('user_id', user.user.id);
+    console.log(cookies.get('user_id'));
+    throw redirect(301, '/verify_email');
   }
 }
