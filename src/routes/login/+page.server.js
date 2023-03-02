@@ -1,30 +1,43 @@
 import { redirect , fail} from '@sveltejs/kit';
-import { log, token } from '../store.js';
-import { browser } from '$app/environment';
+import { login } from '../store.js';
 
+
+
+export const load = ( { cookies } ) => {
+    if (cookies.get('token')) {
+        console.log(cookies.get('token'));
+        throw redirect(301, '/');
+    }
+}
 
 
 export const actions = {
   default: async ({request, cookies}) => {
     const data = Object.fromEntries(await request.formData());
-    if (!data.email || !data.password) {
-        return fail(400, {
-        error: 'Missing email or password'
-        });
-    }
+    const email = data.email;
+    const password = data.password;
+ 
+    if (!email)
+        return fail(400, {mail: {missing: true}});
+    if (!password)
+        return fail(400, {email, password: { missing: true}});
 
     const user = new FormData();
     user.append('username', data.email);
     user.append('password', data.password);
-    
-    const info = await log(user);
-    const { access_token } = info;
 
-    token.update((val) => val += access_token);
-    if (browser)
-        localStorage.setItem('token', access_token);
-    cookies.set('token', access_token, {httpOnly: false, secure: false});
-    console.log('Cookies', cookies.get('token'));
+    const res = await login(user);
+    if (res.status === 401)
+        return fail(401, {incorrect: true});
+
+    const { access_token } = await res.json();
+    cookies.set('token', access_token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+          path: "/",
+          maxAge: 60 * 5
+      });
     throw redirect(301, '/');
   }
 }

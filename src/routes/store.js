@@ -1,24 +1,16 @@
-import { writable } from 'svelte/store';
-import { browser } from '$app/environment';
-
-
-export const token = writable('');
-
 const BASE_URL = 'http://localhost:8000/api/v1'
 
-export const getUser = async () => {
-    const data = await fetch(`${BASE_URL}/users/d33d2926-69f3-4783-8427-76475d2fb1b9`);
-    const users = await data.json();
-    return users;
+export const getUser = async (user_id) => {
+    const res = await fetch(`${BASE_URL}/users/${user_id}`);
+    return res;
 }
 
-export const log = async (data) => {
-    const info = await fetch(`${BASE_URL}/sign_in`, {
+export const login = async (data) => {
+    const res = await fetch(`${BASE_URL}/sign_in`, {
         method: "POST",
         body: data,
         redirect: "follow"
     });
-    const res = await info.json();
     return res;
 }
 
@@ -31,13 +23,17 @@ export const getMe = async (token) => {
         method: "GET"
     });
 
-    const me = await res.json();
-
-    return me;
+    return res;
 }
 
-//export const getUserAccount = async (userId) => {
-    //const data = await fetch(`${BASE_URL}/${userId}/accounts`);
-    //const account = await data.json();
-    //return account;
-//}
+export const registerUser = async (data) => {
+    const res = await fetch(`${BASE_URL}/users`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    return res;
+}
