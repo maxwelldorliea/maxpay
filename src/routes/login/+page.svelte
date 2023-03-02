@@ -1,6 +1,5 @@
 <script>
   export let form;
-  console.log(form);
 </script>
 
 <form method="POST" class="form bg-slate-200 flex flex-col h-screen justify-center p-8 rounded-xl">
@@ -18,6 +17,5 @@
   <button class="block text-3xl md:w-1/5 bg-blue-700 p-4 md:p-5 rounded-xl container mx-auto mt-5 text-white">Log in</button>
   <p class="text-2xl">You Don't Have An Account <a href="/signup"><span class="text-blue-700">Sign Up</span></a></p>
 </form>
-
 <style lang="postcss">
 </style>

@@ -5,7 +5,6 @@ import { login } from '../store.js';
 
 export const load = ( { cookies } ) => {
     if (cookies.get('token')) {
-        console.log(cookies.get('token'));
         throw redirect(301, '/');
     }
 }
