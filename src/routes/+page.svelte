@@ -2,6 +2,7 @@
   import Balance from '../components/Balance.svelte';
   import AccountInfo from '../components/AccountInfo.svelte';
   import Activity from '../components/Activity.svelte';
+  import Transaction from '../components/Transaction.svelte';
   
   export let data;
   let accProps = {
@@ -12,9 +13,10 @@
 </script>
 
 <AccountInfo {...accProps} />
-<div>
 <Balance balance={data.obj.account.balance} />
-<Activity />
+<div class="flex">
+  <Activity />
+  <Transaction />
 </div>
 
 <style lang="postcss">

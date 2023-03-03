@@ -1,5 +1,3 @@
-import { writable } from 'svelte/store';
-
 const BASE_URL = 'http://localhost:8000/api/v1'
 
 export const getUser = async (user_id) => {
