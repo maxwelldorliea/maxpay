@@ -23,8 +23,13 @@ export const actions = {
     if (res.status === 400)
       return fail(404, {firstName, lastName, email, middleName, mailTaken: true});
     const user = await res.json();
-    cookies.set('user_id', user.user.id);
-    console.log(cookies.get('user_id'));
+      cookies.set('user_id', user.user.id, {
+          httpOnly: true,
+          secure: true,
+          path: '/verify_email',
+          sameSite: 'strict',
+          maxAge: 60*10
+      });
     throw redirect(301, '/verify_email');
   }
 }
