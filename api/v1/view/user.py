@@ -8,11 +8,12 @@ from models.otp import OTP
 from models.transaction import Transaction
 from schemes.user import VerifyUser
 from schemes.user import UserRequest, UserResponse, TransferData, CurrentUser, Login
-from fastapi import HTTPException, status, Depends, APIRouter
+from fastapi import HTTPException, status, Depends, APIRouter, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import List
 from api.auth.jwt_auth import get_current_user, create_access_token
 from utils.password_utils import hash_password, verify_password
+from utils.mail_utils import send_verification_mail
 
 
 user_view = APIRouter(prefix='/api/v1', tags=['USER'])
@@ -27,7 +28,7 @@ def get_users(limit: int=25, user: User=Depends(get_current_user)):
 
 
 @user_view.post('/users', response_model=CurrentUser)
-def create_user(user: UserRequest):
+def create_user(user: UserRequest, background_tasks: BackgroundTasks):
     """Create a new user in db storage."""
     user = User(**(user).dict())
     if (user.get_user_by_email()):
@@ -43,6 +44,10 @@ def create_user(user: UserRequest):
     role.save()
     otp = OTP(user_id=user.id, code=OTP.generate_otp())
     otp.save()
+    background_tasks.add_task(
+            send_verification_mail, domain=storage.env['MAIL_DOMAIN'],
+            api_key=storage.env['MAIL_API_KEY'], code=otp.code,
+            user_mail=user.email, system_mail=storage.env['SYSTEM_MAIL'])
     account_info = {
             'user': user,
             'account': user.account
