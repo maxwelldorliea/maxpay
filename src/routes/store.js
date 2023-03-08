@@ -26,20 +26,8 @@ export const getMe = async (token) => {
     return res;
 }
 
-export const registerUser = async (data) => {
-    const res = await fetch(`${BASE_URL}/users`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-
-    return res;
-}
-
-export const VerifyMail = async (data) => {
-    const res = await fetch(`${BASE_URL}/verify_email`, {
+export const postData = async (data, route) => {
+    const res = await fetch(`${BASE_URL}/${route}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'

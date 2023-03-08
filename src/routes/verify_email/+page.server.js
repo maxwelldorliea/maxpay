@@ -1,5 +1,5 @@
 import { redirect, fail } from "@sveltejs/kit";
-import { VerifyMail } from '../store.js';
+import { postData } from '../store.js';
 
 export const actions = {
   default: async ({ request, cookies }) => {
@@ -10,7 +10,7 @@ export const actions = {
     if (!code)
       return fail(400, {missing: true});
 
-    const res = await VerifyMail({"user_id": user_id, "code": code});
+    const res = await postData({"user_id": user_id, "code": code}, 'verify_email');
     if (res.status === 400 )
       return fail(400, {incorrect: true});
     throw redirect(301, '/login');

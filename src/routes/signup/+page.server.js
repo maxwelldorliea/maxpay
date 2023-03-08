@@ -1,5 +1,5 @@
 import { redirect, fail } from '@sveltejs/kit';
-import { registerUser } from '../store.js';
+import { postData } from '../store.js';
 
 export const actions = {
   default: async ({ request, cookies}) => {
@@ -19,7 +19,7 @@ export const actions = {
       return fail(400, {firstName, lastName, middleName, mail: {missing: true}});
     if (!password)
       return fail(400, {firstName, lastName, email, middleName, password: {missing: true}});
-    const res = await registerUser(data);
+    const res = await postData(data, 'users');
     if (res.status === 400)
       return fail(404, {firstName, lastName, email, middleName, mailTaken: true});
     const user = await res.json();
