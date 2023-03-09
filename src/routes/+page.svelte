@@ -3,7 +3,8 @@
   import AccountInfo from '../components/AccountInfo.svelte';
   import Activity from '../components/Activity.svelte';
   import Transaction from '../components/Transaction.svelte';
-  
+  import { redirect } from '@sveltejs/kit';
+ 
   export let data;
   let accProps = {
     first_name: data.obj.user.first_name,
