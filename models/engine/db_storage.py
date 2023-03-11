@@ -27,15 +27,14 @@ class DBStorage:
 
     def __init__(self, dot_env=True) -> None:
         """Initializes the DBStorage Engine."""
+        self.env = self.config_env()
         if dot_env:
-            self.env = self.config_env()
             self.__engine = create_engine("mysql://{}:{}@{}/{}".format(
                 self.env['DB_USER'], self.env['DB_PASS'],
                 self.env['HOST'], self.env['DB']
                 ), pool_pre_ping=True)
         else:
             self.__engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
-            self.env = {}
         if self.env.get('ENV') == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -89,7 +88,7 @@ class DBStorage:
         """Close the current db session."""
         self.__session.close()
 
-    def reload(self):
+    def reload(self) -> None:
         """Initialize the db."""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
@@ -122,21 +121,21 @@ class DBStorage:
             account_number="".join(random.choices(num, k=10))
         return account_number
 
-    def verify_user(self, cls: OTP, user_id: str, code: int):
+    def verify_user(self, cls: OTP, user_id: str, code: int) -> bool:
         """Verify user registration."""
-        user = self.get(User, user_id)
+        user: User = self.get(User, user_id)
         otp = self.__session.query(cls).where(cls.user_id == user_id).first()
-        if otp.code != code:
+        if not otp or otp.code != code:
             return False
         user.is_verify = True
         self.delete(otp)
         self.save()
         return True
 
-    def update(self, cls, obj):
+    def update(self, cls, obj) -> None:
         """Update the current object."""
         self.__session.query(cls).update(obj)
-    
-    def delete(self, obj):
+
+    def delete(self, obj) -> None:
         """Delete the current object."""
         self.__session.delete(obj)
