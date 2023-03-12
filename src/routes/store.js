@@ -1,7 +1,7 @@
 const BASE_URL = 'http://localhost:8000/api/v1'
 
-export const getUser = async (user_id) => {
-    const res = await fetch(`${BASE_URL}/users/${user_id}`);
+export const getData = async (id, url) => {
+    const res = await fetch(`${BASE_URL}/${url}/${id}`);
     return res;
 }
 
@@ -21,6 +21,19 @@ export const getMe = async (token) => {
     const res = await fetch(`${BASE_URL}/me`, {
         headers: header,
         method: "GET"
+    });
+
+    return res;
+}
+
+export const postDataWithToken = async (token, data, route) => {
+    const header = new Headers();
+    header.append('Authorization', `Bearer ${token}`);
+    header.append('Content-Type', 'application/json');
+    const res = await fetch(`${BASE_URL}/${route}`, {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(data)
     });
 
     return res;
