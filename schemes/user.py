@@ -22,13 +22,23 @@ class VerifyUser(BaseModel):
     user_id: str
     code: int
 
+class UserAcc(BaseModel):
+    first_name: str
+    last_name: str
+
+    class Config:
+        orm_mode=True
+
+
 class TransferData(BaseModel):
     account_number: str
     amount: int
+    pin: str
 
 class Account(BaseModel):
     account_number: str
     balance: int
+    is_block: bool
 
     class Config:
         orm_mode=True

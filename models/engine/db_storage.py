@@ -121,6 +121,14 @@ class DBStorage:
             account_number="".join(random.choices(num, k=10))
         return account_number
 
+    def get_user_by_account_number(self, acc_number: str):
+        """Return an user given account number."""
+        acc = self.get_account_by_number(Account, acc_number)
+        if not acc:
+            return
+        user = self.get(User, acc.user_id)
+        return user
+
     def verify_user(self, cls: OTP, user_id: str, code: int) -> bool:
         """Verify user registration."""
         user: User = self.get(User, user_id)

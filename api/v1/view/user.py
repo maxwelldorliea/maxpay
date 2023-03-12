@@ -7,7 +7,7 @@ from models.role import Role
 from models.otp import OTP
 from models.transaction import Transaction
 from schemes.user import VerifyUser
-from schemes.user import UserRequest, UserResponse, TransferData, CurrentUser, Login
+from schemes.user import UserRequest, UserResponse, TransferData, CurrentUser, Login, UserAcc
 from fastapi import HTTPException, status, Depends, APIRouter, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import List
@@ -111,8 +111,8 @@ def get_me(user: User=Depends(get_current_user)):
 @user_view.post('/transfer')
 def transfer(data: TransferData, user: User = Depends(get_current_user)):
     """Transfer money from the current user account to specific user."""
-    amount, account_number = data.amount, data.account_number
-    
+    amount, account_number, pin = data.amount, data.account_number, data.pin
+
     if amount < 0:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Amount can't be negative")
     if amount % 5 != 0:
@@ -121,6 +121,8 @@ def transfer(data: TransferData, user: User = Depends(get_current_user)):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Not enough fund')
     if user.account.account_number == account_number:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Can't send money to yourself")
+    if not verify_password(pin, user.account.pin):
+        raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Invalid pin")
     account = storage.get_account_by_number(Account, account_number)
     if not account:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Not a registered user')
@@ -141,3 +143,12 @@ def transfer(data: TransferData, user: User = Depends(get_current_user)):
             'Amount': amount,
             'type': 'transfer'
             }
+
+
+@user_view.post('/users/acc/{acc_number}', response_model=UserAcc)
+def get_user_by_account_number(acc_number: str):
+    """Return a user given account number."""
+    user = storage.get_user_by_account_number(acc_number);
+    if not user:
+        raise HTTPException(404, detail="Account not register")
+    return user

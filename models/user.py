@@ -19,7 +19,7 @@ class User(BaseModel, Base):
     account: Mapped["Account"] = relationship(back_populates='user')
     last_name: Mapped[str] = mapped_column(String(30))
     is_verify: Mapped[bool] = mapped_column(default=False)
-    email: Mapped[str] = mapped_column(String(30), unique=True)
+    email: Mapped[str] = mapped_column(String(80), unique=True)
     password: Mapped[str] = mapped_column(String(80))
     
     def get_user_by_email(self):
