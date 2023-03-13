@@ -1,5 +1,5 @@
 import { redirect , fail} from '@sveltejs/kit';
-import { login } from '../store.js';
+import { login } from '$lib/request_utils.js';
 
 
 

@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { getData, postDataWithToken } from '../store.js';
+import { getData, postDataWithToken } from '$lib/request_utils.js';
 
 
 let account_number;
@@ -7,8 +7,10 @@ let amount;
 let username;
 
 export const actions = {
-  initialize: async ( { request } ) => {
+  initialize: async ( { request, locals } ) => {
     const data = Object.fromEntries(await request.formData());
+    const account = locals.user.account;
+    const user = locals.user.user;
     account_number = data.account_number;
     amount = data.amount;
 
@@ -21,13 +23,17 @@ export const actions = {
         return fail(400, {account_number, notDivible: true});
     if (amount <= 0)
         return fail(400, {account_number, notValid: true});
+    if (account_number === account.account_number)
+        return fail(400, {account_number, amount, sameAcc: true});
+    if (amount > account.balance)
+        return fail(400, {account_number, amount, insufficient: true});
 
     const acc = await getData(account_number, 'users/acc');
-    if (acc.status === 404)
+    if (acc.status === 404 || acc.status >= 400)
         return fail(400, {account_number, amount, notExist: true});
     const accInfo = await acc.json();
-    username = `${accInfo.first_name} ${accInfo.last_name}`
-    return {isAvailable: true};
+    username = `${accInfo.first_name} ${accInfo.last_name}`;
+    return {isAvailable: true, amount, username, account_number};
   },
 
   complete: async ( { request, cookies } ) => {
@@ -43,8 +49,9 @@ export const actions = {
     const token = await cookies.get('token');
     const res = await postDataWithToken(token, obj, "transfer");
     if (res.status === 403)
-      return fail(400, {isAvailable: true, invalid: true});
-    console.log(await res.json());
+      return fail(400, {isAvailable: true, username, amount, account_number, invalid: true});
+    if (res.status === 400)
+      return fail(400, {account_number, amount, isAvailable: false, insufficient: true});
 
     throw redirect(301, '/');
   }
