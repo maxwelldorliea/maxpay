@@ -53,3 +53,7 @@ class CurrentUser(BaseModel):
 class Login(BaseModel):
     email: str
     password: str
+
+class ChangePin(BaseModel):
+    pin: str
+    new_pin: str

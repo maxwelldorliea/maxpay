@@ -7,7 +7,9 @@ from models.role import Role
 from models.otp import OTP
 from models.transaction import Transaction
 from schemes.user import VerifyUser
-from schemes.user import UserRequest, UserResponse, TransferData, CurrentUser, Login, UserAcc
+from schemes.user import (
+        UserRequest, UserResponse,TransferData,
+        CurrentUser, Login, UserAcc, ChangePin)
 from fastapi import HTTPException, status, Depends, APIRouter, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import List
@@ -173,3 +175,16 @@ def get_transaction(limit: int=25, offset: int=0, user: User = Depends(get_curre
     """Return user last 25 transactions."""
     transactions = [val for _, val in storage.all(Transaction, limit, offset, user.id).items()]
     return transactions
+
+
+@user_view.post('/change_pin')
+def change_transaction_pin(change_pin: ChangePin, user: User=Depends(get_current_user)):
+    """Change the user transaction given required and correct info is pass."""
+    if len(change_pin.new_pin) != 4:
+        raise HTTPException(400, detail="Length of pin must be 4")
+    if not verify_password(change_pin.pin, user.account.pin):
+        raise HTTPException(400, detail='Invalid pin')
+    account = storage.get_account_by_number(Account, user.account.account_number)
+    account.pin = hash_password(change_pin.new_pin)
+    account.save()
+    return {'status': 'successful'}
