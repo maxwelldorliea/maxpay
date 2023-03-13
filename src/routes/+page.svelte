@@ -3,6 +3,8 @@
   import AccountInfo from '$lib/components/AccountInfo.svelte';
   import Activity from '$lib/components/Activity.svelte';
   import Transaction from '$lib/components/Transaction.svelte';
+  import ChangePin from '$lib/components/ChangePin.svelte';
+  import Approval from '$lib/components/Approval.svelte';
   import { redirect } from '@sveltejs/kit';
  
   export let data;
@@ -15,9 +17,13 @@
 
 <AccountInfo {...accProps} />
 <Balance balance={data.obj.account.balance} />
-<div class="flex">
+<div class="flex justify-evenly">
   <Activity />
   <Transaction />
+</div>
+<div class="flex justify-evenly">
+  <ChangePin />
+  <Approval />
 </div>
 
 <style lang="postcss">
