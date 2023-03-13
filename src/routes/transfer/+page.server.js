@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import { getData, postDataWithToken } from '$lib/request_utils.js';
+import { getDataWithToken, postDataWithToken } from '$lib/request_utils.js';
 
 
 let account_number;
@@ -7,7 +7,7 @@ let amount;
 let username;
 
 export const actions = {
-  initialize: async ( { request, locals } ) => {
+  initialize: async ( { request, locals, cookies } ) => {
     const data = Object.fromEntries(await request.formData());
     const account = locals.user.account;
     const user = locals.user.user;
@@ -28,7 +28,9 @@ export const actions = {
     if (amount > account.balance)
         return fail(400, {account_number, amount, insufficient: true});
 
-    const acc = await getData(account_number, 'users/acc');
+    const route = `users/acc/${account_number}`;
+    const token = cookies.get('token');
+    const acc = await getDataWithToken(token, route);
     if (acc.status === 404 || acc.status >= 400)
         return fail(400, {account_number, amount, notExist: true});
     const accInfo = await acc.json();
