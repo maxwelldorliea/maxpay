@@ -48,18 +48,20 @@ class DBStorage:
         return env
 
 
-    def all(self, cls=None, limit=25) -> dict:
+    def all(self, cls=None, limit=25, offset=0, user_id=None) -> dict:
         """Return all objects in the db or all objects for the class pass."""
         objs = {}
         if not cls:
             for name, model in models.items():
-                result = self.__session.query(model).limit(limit).all()
+                result = self.__session.query(model).offset(offset).limit(limit).all()
                 for obj in result:
                     key = f'{obj.__class__.__name__}.{obj.id}'
                     objs[key] = obj
             return objs
-
-        result = self.__session.query(cls).limit(limit).all()
+        if not user_id:
+            result = self.__session.query(cls).offset(offset).limit(limit).all()
+        else:
+            result = self.__session.query(cls).where(cls.user_id == user_id).offset(offset).limit(limit).all()
         for obj in result:
             key = f'{obj.__class__.__name__}.{obj.id}'
             objs[key] = obj

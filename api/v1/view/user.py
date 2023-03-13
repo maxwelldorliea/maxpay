@@ -18,9 +18,9 @@ from utils.mail_utils import send_verification_mail
 
 user_view = APIRouter(prefix='/api/v1', tags=['USER'])
 @user_view.get('/users', response_model=List[UserResponse])
-def get_users(limit: int=25, user: User=Depends(get_current_user)):
+def get_users(limit: int=25, offset: int=0, user: User=Depends(get_current_user)):
     """Return list of user objects in storage base on limit parameter."""
-    user_objs = storage.all(User, limit)
+    user_objs = storage.all(User, limit, offset)
     users = []
     for _, user in user_objs.items():
         users.append(user.to_dict())
@@ -38,12 +38,13 @@ def create_user(user: UserRequest, background_tasks: BackgroundTasks):
     account.get_user_account_num()
     account.pin = hash_password(storage.env['DEFAULT_PIN'])
     user.password = hash_password(user.password)
-    user.save()
-    account.save()
+    user.new()
+    account.new()
     role = Role(user_id=user.id, role='user')
-    role.save()
+    role.new()
     otp = OTP(user_id=user.id, code=OTP.generate_otp())
-    otp.save()
+    otp.new()
+    storage.save()
     background_tasks.add_task(
             send_verification_mail, domain=storage.env['MAIL_DOMAIN'],
             api_key=storage.env['MAIL_API_KEY'], code=otp.code,
@@ -117,12 +118,12 @@ def transfer(data: TransferData, user: User = Depends(get_current_user)):
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Amount can't be negative")
     if amount % 5 != 0:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Amount must be divisible by 5')
-    if user.account.balance < amount:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Not enough fund')
     if user.account.account_number == account_number:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Can't send money to yourself")
     if not verify_password(pin, user.account.pin):
         raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Invalid pin")
+    if user.account.balance < amount:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Not enough fund')
     account = storage.get_account_by_number(Account, account_number)
     if not account:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Not a registered user')
@@ -136,19 +137,26 @@ def transfer(data: TransferData, user: User = Depends(get_current_user)):
     transaction.balance_after_transaction=user.account.balance
     transaction.action = "Transfer"
     transaction.message = f"You have transferred {amount} to {account.account_number}. Your new balance is {user.account.balance}"
-    account.save()
-    user_account.save()
-    transaction.save()
+    account.new()
+    user_account.new()
+    transaction.new()
+    storage.save()
     return {
             'Amount': amount,
             'type': 'transfer'
             }
 
 
-@user_view.post('/users/acc/{acc_number}', response_model=UserAcc)
-def get_user_by_account_number(acc_number: str):
+@user_view.get('/users/acc/{acc_number}', response_model=UserAcc)
+def get_user_by_account_number(acc_number: str, _=Depends(get_current_user)):
     """Return a user given account number."""
     user = storage.get_user_by_account_number(acc_number);
     if not user:
         raise HTTPException(404, detail="Account not register")
     return user
+
+@user_view.get('/transactions')
+def get_transaction(limit: int=25, offset: int=0, user: User = Depends(get_current_user)):
+    """Return user last 25 transactions."""
+    transactions = [val for _, val in storage.all(Transaction, limit, offset, user.id).items()]
+    return transactions

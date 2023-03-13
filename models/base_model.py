@@ -50,6 +50,9 @@ class BaseModel:
         models.storage.new(self)
         models.storage.save()
 
+    def new(self):
+        """Add an object to the db session."""
+        models.storage.new(self)
     
     def to_dict(self):
         """Convert the object to dictionary representation."""

@@ -6,7 +6,7 @@ from api.v1.view import app_view
 from api.v1.view.user import user_view
 
 
-async def close_session() -> None:
+async def close_session():
     """Close current after every request."""
     print('Closing current session')
     yield
@@ -16,15 +16,6 @@ async def close_session() -> None:
 app = FastAPI(dependencies=[Depends(close_session)])
 app.include_router(app_view)
 app.include_router(user_view)
-@app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
-    # do things before the request
-    print("Middle", "Closing session")
-    response = await call_next(request)
-    # do things after the response
-    print("Middle", "Closed session")
-    return response
-
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app)
