@@ -1,8 +1,8 @@
 <script>
-  import Balance from '../components/Balance.svelte';
-  import AccountInfo from '../components/AccountInfo.svelte';
-  import Activity from '../components/Activity.svelte';
-  import Transaction from '../components/Transaction.svelte';
+  import Balance from '$lib/components/Balance.svelte';
+  import AccountInfo from '$lib/components/AccountInfo.svelte';
+  import Activity from '$lib/components/Activity.svelte';
+  import Transaction from '$lib/components/Transaction.svelte';
   import { redirect } from '@sveltejs/kit';
  
   export let data;
