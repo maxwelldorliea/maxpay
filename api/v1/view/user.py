@@ -128,18 +128,31 @@ def transfer(data: TransferData, user: User = Depends(get_current_user)):
     if not account:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Not a registered user')
     user_account = storage.get(Account, user.account.id)
-    transaction = Transaction(user_id=user.id)
-    transaction.balance_before_transaction=user.account.balance
-    transaction.user_id=user.id
-    transaction.amount=amount
+    balance_before_transaction=user.account.balance
     user_account.balance = user_account.balance - amount
+    balance_after_transaction=user.account.balance
+    message = f"You have transferred {amount} to {account_number}. Your new balance is {user.account.balance}"
+    ## Sender transaction history
+    transaction_sender = Transaction(
+            user_id=user.id, action="Transfer",
+            balance_before_transaction=balance_before_transaction,
+            balance_after_transaction=balance_after_transaction,
+            message=message, amount=amount, receiver_sender_acc_id=account_number)
+    ## Receiver transaction history
+    balance_before_transaction=account.balance
     account.balance = account.balance + amount
-    transaction.balance_after_transaction=user.account.balance
-    transaction.action = "Transfer"
-    transaction.message = f"You have transferred {amount} to {account.account_number}. Your new balance is {user.account.balance}"
+    balance_after_transaction=account.balance
+    message = f"You have received {amount} from {user.account.account_number}. Your new balance is {account.balance}"
+    receiver = storage.get_user_by_account_number(account_number)
+    transaction_receiver = Transaction(
+            user_id=receiver.id, action="Receive",
+            balance_before_transaction=balance_before_transaction,
+            balance_after_transaction=balance_after_transaction,
+            message=message, amount=amount, receiver_sender_acc_id=user.account.account_number)
     account.new()
     user_account.new()
-    transaction.new()
+    transaction_sender.new()
+    transaction_receiver.new()
     storage.save()
     return {
             'Amount': amount,

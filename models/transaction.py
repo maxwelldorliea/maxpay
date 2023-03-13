@@ -12,6 +12,7 @@ class Transaction(BaseModel, Base):
     action: Mapped[str] = mapped_column(String(20))
     message: Mapped[str] = mapped_column(String(3000))
     amount: Mapped[int] = mapped_column()
+    receiver_sender_acc_id: Mapped[str] = mapped_column(String(80))
     fees: Mapped[int] = mapped_column(default=0)
     balance_before_transaction: Mapped[int] = mapped_column()
     balance_after_transaction: Mapped[int] = mapped_column()
