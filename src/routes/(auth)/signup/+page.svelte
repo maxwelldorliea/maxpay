@@ -9,10 +9,6 @@
     {#if form?.fName?.missing}<p class="text-red-700 text-center">First Name is required</p>{/if}
   </label>
   <label>
-    <span class="block text-center mt-2 mb-2">Middle Name</span>
-    <input name="middle_name" type="text" value={form?.middleName ?? ''} class="md:w-3/5 block p-4 rounded-xl container mx-auto">
-  </label>
-  <label>
     <span class="block text-center mt-2 mb-2">Last Name<span class="text-red-700">*</span></span>
     <input name="last_name" type="text" value={form?.lastName ?? ''} class="md:w-3/5 block p-4 rounded-xl container mx-auto">
     {#if form?.lName?.missing}<p class="text-red-700 text-center">Last Name is required</p>{/if}
