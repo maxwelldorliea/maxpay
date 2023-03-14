@@ -2,8 +2,8 @@
   import { Hamburger } from 'svelte-hamburgers';
   import Menu from './Menu.svelte';
   export let login;
-  let loginMenu = ['Dashboard', 'Logout'];
-  let menu = ['Login', 'Signup'];
+  let loginMenu = ['dashboard', 'logout'];
+  let menu = ['login', 'signup'];
   let open;
   const src = 'images/maxpay_logo.png';
 </script>
@@ -16,11 +16,11 @@
         --color="white" />
       <Menu bind:open menu={loginMenu}/>
     </div>
-    <div style="background-color:#1d1d2f;">
+    <div class="hidden md:block"style="background-color:#1d1d2f;">
       <Hamburger
         bind:open
         --color="white" />
-      <Menu bind:open {loginMenu}/>
+      <Menu bind:open menu={loginMenu}/>
     </div>
   {:else}
     <div class="md:hidden" style="background-color:#1d1d2f;">
@@ -46,13 +46,13 @@
    </a>
    {#if !login}
      <div class="mt-4 text-xl hidden md:block">
-       <a href='/login'><button>Login</button></a>
-       <a href='/signup'><button>Signup</button></a>
+       <a href='/login'>Login</a>
+       <a href='/signup'>Signup</a>
      </div>
    {:else}
-     <div class="mt-4 text-xl">
-       <a href='/dashboard'><button>Dashboard</button></a>
-       <a href='/logout'><button>Logout</button></a>
+     <div class="hidden md:block mt-4 text-xl">
+       <a href='/dashboard'>Dashboard</a>
+       <a href='/logout'>Logout</a>
      </div>
    {/if}
    <div class="md:hidden">

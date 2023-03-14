@@ -2,7 +2,7 @@
   import { Hamburger } from 'svelte-hamburgers';
   import Menu from './Menu.svelte';
   
-  const menu = ['Account', 'Logout']
+  const menu = ['account', 'logout']
   const src = 'images/maxpay_logo.png';
   let open;
 </script>
@@ -13,8 +13,8 @@
      <h3 class="mx-6 mt-4 font-bold text-2xl">MAXPAY</h3>
   </a>
    <div class="mt-4 my-4 text-xl hidden md:block">
-     <a href='/account' class="my-3"><button>Account Settings</button></a>
-     <a href="/logout"><button>Sign Out</button></a>
+     <a href='/account' class="my-3">Account</a>
+     <a href="/logout">Logout</a>
    </div>
    <div class="md:hidden">
      <Hamburger bind:open --color='white' />

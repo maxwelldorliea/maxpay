@@ -10,7 +10,7 @@
     <div>
         {#each menu as link, i}
             <a href="/{link}" transition:fly={{ y: -15, delay: 50 * i }}>
-                {link}
+                {link.charAt(0).toUpperCase() + link.slice(1)}
             </a>
         {/each}
     </div>
