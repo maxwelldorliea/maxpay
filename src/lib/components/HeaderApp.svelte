@@ -1,5 +1,4 @@
 <script>
-  let login = false;
   const src = 'images/maxpay_logo.png';
 </script>
 
@@ -8,11 +7,10 @@
    <img class="w-16" {src} alt="MaxPay Logo" />
    <h3 class="mx-6 mt-4 font-bold text-2xl">MAXPAY</h3>
  </a>
- {#if !login}
-   <a href='/login'><button>Sign In</button></a>
- {:else}
-   <a href="/login"><button>Sign Out</button></a>
- {/if}
+ <div class="mt-4 my-4 text-xl">
+   <a href='/account' class="my-3"><button>Account Settings</button></a>
+   <a href="/logout"><button>Sign Out</button></a>
+ </div>
 </header>
 
 <style lang="postcss">

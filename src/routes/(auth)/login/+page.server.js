@@ -37,6 +37,6 @@ export const actions = {
           path: "/",
           maxAge: 60 * 5
       });
-    throw redirect(301, '/');
+    throw redirect(302, '/dashboard');
   }
 }
