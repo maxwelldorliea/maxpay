@@ -55,6 +55,6 @@ export const actions = {
     if (res.status === 400)
       return fail(400, {account_number, amount, isAvailable: false, insufficient: true});
 
-    throw redirect(301, '/');
+    throw redirect(301, '/dashboard');
   }
 }
