@@ -12,7 +12,6 @@ class User(BaseModel, Base):
     """Implement all user functionalities."""
     __tablename__ = 'users'
     first_name: Mapped[str] = mapped_column(String(30))
-    middle_name: Mapped[str] = mapped_column(String(30), nullable=True)
     roles: Mapped[List["Role"]] = relationship()
     otp: Mapped[List["OTP"]] = relationship()
     transaction_histories: Mapped[List["Transaction"]] = relationship()

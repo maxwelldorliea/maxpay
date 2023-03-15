@@ -41,3 +41,13 @@ def get_current_user(token: str=Depends(oauth2_scheme)) -> User:
                 detail='Could not validate credentials',
                 headers={'WWW-Authenticate': 'Bearer'})
     return user
+
+def is_admin(user: User=Depends(get_current_user)) -> None:
+    """Check if the current user is an admin."""
+    for role in user.roles:
+        if role.role == 'admin':
+            return
+    raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED,
+            detail='user do not have the required permission to access this resource',
+            headers={'WWW-Authenticate': 'Bearer'})

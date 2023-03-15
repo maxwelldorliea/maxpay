@@ -13,14 +13,14 @@ from schemes.user import (
 from fastapi import HTTPException, status, Depends, APIRouter, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import List
-from api.auth.jwt_auth import get_current_user, create_access_token
+from api.auth.jwt_auth import get_current_user, create_access_token, is_admin
 from utils.password_utils import hash_password, verify_password
-from utils.mail_utils import send_verification_mail
+from utils.mail_utils import send_verification_mail, send_transaction_alert
 
 
 user_view = APIRouter(prefix='/api/v1', tags=['USER'])
-@user_view.get('/users', response_model=List[UserResponse])
-def get_users(limit: int=25, offset: int=0, user: User=Depends(get_current_user)):
+@user_view.get('/users', response_model=List[UserResponse], tags=['ADMIN'])
+def get_users(limit: int=25, offset: int=0, user: User=Depends(is_admin)):
     """Return list of user objects in storage base on limit parameter."""
     user_objs = storage.all(User, limit, offset)
     users = []
@@ -47,10 +47,11 @@ def create_user(user: UserRequest, background_tasks: BackgroundTasks):
     otp = OTP(user_id=user.id, code=OTP.generate_otp())
     otp.new()
     storage.save()
+    username = f'{user.first_name} {user.last_name}'
     background_tasks.add_task(
             send_verification_mail, domain=storage.env['MAIL_DOMAIN'],
             api_key=storage.env['MAIL_API_KEY'], code=otp.code,
-            user_mail=user.email, system_mail=storage.env['SYSTEM_MAIL'])
+            user_mail=user.email, system_mail=storage.env['SYSTEM_MAIL'], username=username)
     account_info = {
             'user': user,
             'account': user.account
@@ -112,7 +113,7 @@ def get_me(user: User=Depends(get_current_user)):
 
 
 @user_view.post('/transfer')
-def transfer(data: TransferData, user: User = Depends(get_current_user)):
+def transfer(data: TransferData, background_tasks: BackgroundTasks, user: User = Depends(get_current_user)):
     """Transfer money from the current user account to specific user."""
     amount, account_number, pin = data.amount, data.account_number, data.pin
 
@@ -133,18 +134,18 @@ def transfer(data: TransferData, user: User = Depends(get_current_user)):
     balance_before_transaction=user.account.balance
     user_account.balance = user_account.balance - amount
     balance_after_transaction=user.account.balance
-    message = f"You have transferred {amount} to {account_number}. Your new balance is {user.account.balance}"
+    message_sender = f"You have transferred <b>{amount}</b> to <b>{account_number}</b>. Your new balance is <b>{user.account.balance}</b>"
     ## Sender transaction history
     transaction_sender = Transaction(
             user_id=user.id, action="Transfer",
             balance_before_transaction=balance_before_transaction,
             balance_after_transaction=balance_after_transaction,
-            message=message, amount=amount, receiver_sender_acc_id=account_number)
+            message=message_sender, amount=amount, receiver_sender_acc_id=account_number)
     ## Receiver transaction history
     balance_before_transaction=account.balance
     account.balance = account.balance + amount
     balance_after_transaction=account.balance
-    message = f"You have received {amount} from {user.account.account_number}. Your new balance is {account.balance}"
+    message = f"You have received <b>{amount}</b> from <b>{user.account.account_number}</b>. Your new balance is <b>{account.balance}</b>"
     receiver = storage.get_user_by_account_number(account_number)
     transaction_receiver = Transaction(
             user_id=receiver.id, action="Receive",
@@ -156,6 +157,12 @@ def transfer(data: TransferData, user: User = Depends(get_current_user)):
     transaction_sender.new()
     transaction_receiver.new()
     storage.save()
+    background_tasks.add_task(
+            send_transaction_alert, domain=storage.env['MAIL_DOMAIN'],
+            api_key=storage.env['MAIL_API_KEY'], user_mail=user.email, system_mail=storage.env['SYSTEM_MAIL'], message=message_sender)
+    background_tasks.add_task(
+            send_transaction_alert, domain=storage.env['MAIL_DOMAIN'],
+            api_key=storage.env['MAIL_API_KEY'], user_mail=receiver.email, system_mail=storage.env['SYSTEM_MAIL'], message=message)
     return {
             'Amount': amount,
             'type': 'transfer'
