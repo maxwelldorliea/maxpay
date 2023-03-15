@@ -1,7 +1,10 @@
 <script>
+   import Introduction from '$lib/components/Introduction.svelte';
+   import CoreValue from '$lib/components/CoreValue.svelte';
 </script>
 
-<h1 class="text-center text-4xl">Home Page</h1>
+<Introduction />
+<CoreValue />
 
 <style lang="postcss">
 </style>
