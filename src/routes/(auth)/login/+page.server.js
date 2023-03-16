@@ -32,7 +32,7 @@ export const actions = {
     const { access_token } = await res.json();
     cookies.set('token', access_token, {
           httpOnly: true,
-          secure: true,
+          secure: false,
           sameSite: "strict",
           path: "/",
           maxAge: 60 * 5

@@ -7,6 +7,3 @@
 <Introduction />
 <CoreValue />
 <Testimony />
-
-<style lang="postcss">
-</style>

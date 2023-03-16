@@ -28,10 +28,10 @@ export const actions = {
     const user = await res.json();
       cookies.set('user_id', user.user.id, {
           httpOnly: true,
-          secure: true,
+          secure: false,
           path: '/verify_email',
           sameSite: 'strict',
-          maxAge: 60*10
+          maxAge: 60*60*24
       });
     throw redirect(301, '/verify_email');
   }
