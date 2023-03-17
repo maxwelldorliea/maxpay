@@ -32,10 +32,10 @@ export const actions = {
     const { access_token } = await res.json();
     cookies.set('token', access_token, {
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: "strict",
           path: "/",
-          maxAge: 60 * 5
+          maxAge: 60 * 20
       });
     throw redirect(302, '/dashboard');
   }

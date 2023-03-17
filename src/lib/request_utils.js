@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8000/api/v1'
+const BASE_URL = 'http://127.0.0.1:8000/api/v1';
 
 export const getData = async (id, url) => {
     const res = await fetch(`${BASE_URL}/${url}/${id}`);
@@ -18,10 +18,15 @@ export const getDataWithToken = async (token, route) => {
     const header = new Headers();
     header.append('Authorization', `Bearer ${token}`);
     header.append('Content-Type', 'application/json');
-    const res = await fetch(`${BASE_URL}/${route}`, {
+    let res;
+    try {
+        res = await fetch(`${BASE_URL}/${route}`, {
         headers: header,
         method: "GET"
     });
+    } catch (err) {
+        console.log(err);
+    }
 
     return res;
 }

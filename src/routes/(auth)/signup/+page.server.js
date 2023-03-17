@@ -28,7 +28,7 @@ export const actions = {
     const user = await res.json();
       cookies.set('user_id', user.user.id, {
           httpOnly: true,
-          secure: false,
+          secure: true,
           path: '/verify_email',
           sameSite: 'strict',
           maxAge: 60*60*24
