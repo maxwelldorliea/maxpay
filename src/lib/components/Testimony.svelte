@@ -2,7 +2,7 @@
 </script>
 
 <div class="relative pt-20 sm:pt-24 lg:pt-32">
-  <h1 class="tracking-tight font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 text-center dark:text-white">Testimony</h1>
+  <h1 class="tracking-tight font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 text-center dark:text-slate-600">Testimony</h1>
 </div>
 <div class="md:flex bg-white rounded-xl p-8 md:p-0 dark:bg-white">
   <div class="pt-6 md:p-8 text-center space-y-4">

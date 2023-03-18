@@ -6,7 +6,7 @@
 </script>
 
 <div class="relative pt-20 sm:pt-24 lg:pt-32">
-  <h1 class="tracking-tight font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 text-center dark:text-white">Why MAXPAY?</h1>
+  <h1 class="tracking-tight font-extrabold text-4xl sm:text-5xl lg:text-6xl text-slate-900 text-center dark:text-slate-600">Why MAXPAY?</h1>
 </div>
 <div class="flex justify-evenly pt-16 sm:20 lg:pt-28">
   <figure class="rounded-xl p-8 md:p-0 dark:bg-white">
