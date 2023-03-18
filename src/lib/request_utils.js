@@ -18,15 +18,10 @@ export const getDataWithToken = async (token, route) => {
     const header = new Headers();
     header.append('Authorization', `Bearer ${token}`);
     header.append('Content-Type', 'application/json');
-    let res;
-    try {
-        res = await fetch(`${BASE_URL}/${route}`, {
+    const res = await fetch(`${BASE_URL}/${route}`, {
         headers: header,
         method: "GET"
     });
-    } catch (err) {
-        console.log(err);
-    }
 
     return res;
 }
