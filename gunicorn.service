@@ -1,0 +1,13 @@
+[Unit]
+Description=maxpay backend service gunicorn configure template
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/home/maxpay_backend
+Environment="PATH=/home/maxpay_backend/venv/bin"
+ExecStart=/home/maxpay_backend/venv/bin/gunicorn -w 4 -k uvicorn.workers.UvicornWorker api.v1.app:app
+
+[Install]
+WantedBy=multi-user.target

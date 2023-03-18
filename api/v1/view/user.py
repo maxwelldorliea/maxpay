@@ -117,8 +117,8 @@ def transfer(data: TransferData, background_tasks: BackgroundTasks, user: User =
     """Transfer money from the current user account to specific user."""
     amount, account_number, pin = data.amount, data.account_number, data.pin
 
-    if amount < 0:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Amount can't be negative")
+    if amount <= 0:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Amount can't be zero or negative")
     if amount % 5 != 0:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail='Amount must be divisible by 5')
     if user.account.account_number == account_number:
