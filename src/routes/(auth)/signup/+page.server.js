@@ -3,7 +3,7 @@ import { postData } from '$lib/request_utils.js';
 
 export const load = ( {cookies} ) => {
   if (cookies.get('token'))
-      throw redirect(302, '/');
+      throw redirect(301, '/dashboard');
 }
 
 

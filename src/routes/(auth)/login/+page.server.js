@@ -5,7 +5,7 @@ import { login } from '$lib/request_utils.js';
 
 export const load = ( { cookies } ) => {
     if (cookies.get('token')) {
-        throw redirect(301, '/');
+        throw redirect(301, '/dashboard');
     }
 }
 
@@ -37,6 +37,6 @@ export const actions = {
           path: "/",
           maxAge: 60 * 20
       });
-    throw redirect(302, '/dashboard');
+    throw redirect(301, '/dashboard');
   }
 }

@@ -13,7 +13,7 @@
      <h3 class="mx-6 mt-4 font-bold text-2xl">MAXPAY</h3>
   </a>
    <div class="mt-4 my-4 text-xl hidden md:block">
-     <a href='/account' class="my-3">Account</a>
+     <a href='/account' class="mx-3">Account</a>
      <a href="/logout">Logout</a>
    </div>
    <div class="md:hidden">

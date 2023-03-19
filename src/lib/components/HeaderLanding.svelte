@@ -46,12 +46,12 @@
    </a>
    {#if !login}
      <div class="mt-4 text-xl hidden md:block">
-       <a href='/login'>Login</a>
+       <a href='/login' class='mx-3'>Login</a>
        <a href='/signup'>Signup</a>
      </div>
    {:else}
      <div class="hidden md:block mt-4 text-xl">
-       <a href='/dashboard'>Dashboard</a>
+       <a href='/dashboard' class='mx-3'>Dashboard</a>
        <a href='/logout'>Logout</a>
      </div>
    {/if}
