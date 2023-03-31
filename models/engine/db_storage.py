@@ -84,7 +84,10 @@ class DBStorage:
 
     def save(self) -> None:
         """Commit the current db session."""
-        self.__session.commit()
+        try:
+            self.__session.commit()
+        except Exception:
+            self.__session.rollback()
 
     def close(self) -> None:
         """Close the current db session."""

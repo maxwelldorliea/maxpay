@@ -6,14 +6,21 @@ from api.v1.view import app_view
 from api.v1.view.user import user_view
 
 
-async def close_session():
-    """Close current after every request."""
-    print('Closing current session')
-    yield
-    storage.close()
-    print('db session closed.')
+app = FastAPI()
 
-app = FastAPI(dependencies=[Depends(close_session)])
+
+@app.middleware('http')
+async def close_session(request: Request, call_next):
+    try:
+        response = await call_next(request);
+    except Exception as err:
+        response = {'error': str(err)}
+        raise
+    finally:
+        storage.close()
+    return response
+
+
 app.include_router(app_view)
 app.include_router(user_view)
 if __name__ == '__main__':
