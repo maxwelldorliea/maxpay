@@ -11,4 +11,4 @@
   const min = date.getMinutes();
   const sec = date.getSeconds();
 </script>
-<h1>{day}, {month} {dat}, {year}  {hour}:{(min <= 9) ? f'0{min}' : min}:{(sec === 0) ? '00' : sec}</h1>
+<h1>{day}, {month} {dat}, {year}  {hour}:{(min <= 9) ? `0${min}` : min}:{(sec === 0) ? '00' : sec}</h1>
