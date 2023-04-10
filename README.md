@@ -35,12 +35,13 @@ I am building MaxPay around MTN Mobile Money and Orange MOMO Money to solve this
 |  GET   | /api/v1/me           |         YES          | USER          | Returns the current user information     |
 
 
+# Backend
+
 # Requirements
 - MySQL
 - Python3.10 (Should Work Fine from 3.8 Up)
 
-# How To Run This Program
-```
+```bash
 # Clone the repo
 git clone https://github.com/Maxcarrassco/maxpay_backend
 # Move into maxpay directory
@@ -49,7 +50,7 @@ cd maxpay_backend
 cp env .env
 ```
 - Edit .env
-```
+```bash
 HOST=your-db-host
 DB_USER=your-db-username
 DB_PASS=your-db-password
@@ -63,31 +64,24 @@ MAIL_API_KEY=your-mailgun-api-key
 MAIL_DOMAIN=your-mailgun-domain_name(example mail.yourdomain.com)
 SYSTEM_MAIL=your-company-mail(mail use to send  verification code and transaction notification)
 ```
-```
+# How to run the backend
+```bash
 pip3 install -r requirement.txt
 python3 -m api.v1.app
 ```
 
-
-<b>Created By Maxwell Dorliea With ♥️.</b>
-=======
-# create-svelte
-
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
+# Frontend
+# Requirement
+- Node 16.x.x
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+# Move into the frontend directory
+cd frontend
+# install all dependency
+npm install
 ```
 
-## Developing
+## How to run the frontend
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
@@ -98,7 +92,7 @@ npm run dev
 npm run dev -- --open
 ```
 
-## Building
+## How to run production version
 
 To create a production version of your app:
 
@@ -108,5 +102,4 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
->>>>>>> frontend/main
+<b>Created By Maxwell Dorliea With ♥️.</b>
