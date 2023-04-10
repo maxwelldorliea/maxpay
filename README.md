@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <img src='https://maxpay.maxwelldorliea.tech/images/maxpay_logo.png'
       alt='MaxPay Logo' width='300px' height='300px' style='border-radius: 5px;' />
 # MaxPay Backend REST API
@@ -19,6 +18,8 @@ I am building MaxPay around MTN Mobile Money and Orange MOMO Money to solve this
 - FastApi
 - MySQL
 - Mailgun
+- SvelteKit
+- Tailwind CSS
 
 # API Routes
 
