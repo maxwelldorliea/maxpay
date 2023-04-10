@@ -37,6 +37,29 @@ I am building MaxPay around MTN Mobile Money and Orange MOMO Money to solve this
 
 # How To Run This Program
 ```
+# Clone the repo
+git clone https://github.com/Maxcarrassco/maxpay_backend
+# Move into maxpay directory
+cd maxpay_backend
+# Copy env template to .env
+cp env .env
+```
+- Edit .env
+```
+HOST=your-db-host
+DB_USER=your-db-username
+DB_PASS=your-db-password
+DB=your-db-name
+ENV=test
+JWT_SECRET=your-jwt-secret-key
+JWT_TIME_TO_LIVE=user-access-token-expiring-time(in minute)
+JWT_ALGORITHM=your-jwt-algorithm
+DEFAULT_PIN=user-default-transaction-pin
+MAIL_API_KEY=your-mailgun-api-key
+MAIL_DOMAIN=your-mailgun-domain_name(example mail.yourdomain.com)
+SYSTEM_MAIL=your-company-mail(mail use to send  verification code and transaction notification)
+```
+```
 pip3 install -r requirement.txt
 python3 -m api.v1.app
 ```
