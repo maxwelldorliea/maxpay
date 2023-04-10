@@ -29,3 +29,15 @@ I am building MaxPay around MTN Mobile Money and Orange MOMO Money to solve this
 |  PUT   | /api/v1/change_pin   |         YES          | USER          | Change user transaction pin given old transaction |
 |  GET   | /api/v1/transactions |         YES          | USER          | Get an user transactions history         |
 |  GET   | /api/v1/me           |         YES          | USER          | Returns the current user information     |
+
+
+# Requirements
+- MySQL
+- Python3.10 (Should Work Fine from 3.8 Up)
+
+# How To Run This Program
+```
+pip3 install -r requirement.txt
+python3 -m api.v1.app
+```
+
