@@ -2,6 +2,8 @@
       alt='MaxPay Logo' width='300px' height='300px' style='border-radius: 5px;' />
 # MaxPay Backend REST API
 * Making Online payment and Integration easy in Liberia.
+* Live Version
+   https://maxpay.maxwelldorliea.tech
 ## Goal
 My aim is to make payment processing on E-commerce Platform in Liberia easy and intuitive for both the end-users and E-commerce Platform Owners. This project is not intended to replace traditional payment systems like MTN Mobile Money and Orange MoMo Money but to sit as a middleman and make online payment processing easy and intuitive for both the end-users and E-commerce Platform Owners. This project in no way will have direct competition with either MTN Mobile Money or Orange MoMo Money. I am building this project specifically for Liberia.
 
