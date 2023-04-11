@@ -45,7 +45,7 @@ I am building MaxPay around MTN Mobile Money and Orange MOMO Money to solve this
 # Clone the repo
 git clone https://github.com/Maxcarrassco/maxpay_backend
 # Move into maxpay directory
-cd maxpay_backend
+cd maxpay/backend
 # Copy env template to .env
 cp env .env
 ```
@@ -76,7 +76,7 @@ python3 -m api.v1.app
 
 ```bash
 # Move into the frontend directory
-cd frontend
+cd maxpay/frontend
 # install all dependency
 npm install
 ```
