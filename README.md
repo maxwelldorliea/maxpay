@@ -1,6 +1,6 @@
 <img src='https://maxpay.maxwelldorliea.tech/images/maxpay_logo.png'
       alt='MaxPay Logo' width='300px' height='300px' style='border-radius: 5px;' />
-# MaxPay Backend REST API
+# MaxPay Frontend And Backend Business Logic
 * Making Online payment and Integration easy in Liberia.
 * Live Version
    https://maxpay.maxwelldorliea.tech
