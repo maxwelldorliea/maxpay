@@ -5,14 +5,14 @@
 * Live Version
    https://maxpay.maxwelldorliea.tech
 ## Goal
-My aim is to make payment processing on E-commerce Platform in Liberia easy and intuitive for both the end-users and E-commerce Platform Owners. This project is not intended to replace traditional payment systems like MTN Mobile Money and Orange MoMo Money but to sit as a middleman and make online payment processing easy and intuitive for both the end-users and E-commerce Platform Owners. This project in no way will have direct competition with either MTN Mobile Money or Orange MoMo Money. I am building this project specifically for Liberia.
+I aim to make payment processing on E-commerce Platform in Liberia easy and intuitive for both the end-users and E-commerce Platform Owners. This project is not intended to replace traditional payment systems like MTN Mobile Money, Orange MoMo Money, and Stripe but to sit as a middleman and make online payment processing easy and intuitive for both the end-users and E-commerce Platform Owners. This project in no way will have direct competition with either MTN Mobile Money or Orange MoMo Money. I am building this project specifically for Liberia.
 
 ## Why Create MaxPay When There Are Platforms Like PayPal, Stripe etc..
 In Liberia about less than 15% of the population has access to credit card and more than 60% of the population uses MTN Mobile Money and Orange MOMO Money.
 Therefore PayPal and Stripe don't fit in Liberia current economy. Based on these problem it's difficulty to do transactions on E-Commerce Platforms in Liberia.
 
 ## How Am I Going To Solve This Problem
-I am building MaxPay around MTN Mobile Money and Orange MOMO Money to solve this problem.
+I am building MaxPay around MTN Mobile Money, Orange MOMO Money, and Stripe to solve this problem.
 
 ## Technologies
 - FastApi
